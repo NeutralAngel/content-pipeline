@@ -8,6 +8,10 @@ module CoreExtensions
 
   module ObjectExt
 
+    def jruby?
+      RbConfig::CONFIG['ruby_install_name'] == 'jruby'
+    end
+
     # ------------------------------------------------------------------------
     # Convert an element to a Nokogiri document fragment.
     # ------------------------------------------------------------------------
