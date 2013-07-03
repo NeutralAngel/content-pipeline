@@ -19,4 +19,6 @@ module CoreExtensions
   end
 end
 
+# ----------------------------------------------------------------------------
+
 Object.send(:include, CoreExtensions::ObjectExt)
