@@ -47,14 +47,14 @@ class Content::Pipeline
   # --------------------------------------------------------------------------
 
   module Filters
+    require_relative 'filters/code_highlight'
     require_relative 'filters/markdown'
-    require_relative 'filters/pygments'
 
     # ------------------------------------------------------------------------
     # A set of default filters that we use if the user does not supply their
     # own filters for us to use.
     # ------------------------------------------------------------------------
 
-    DEFAULT_FILTERS = [ Markdown, Pygments ].freeze
+    DEFAULT_FILTERS = [ Markdown, CodeHighlight ].freeze
   end
 end

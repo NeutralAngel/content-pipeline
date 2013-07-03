@@ -1,6 +1,6 @@
 require 'rspec/helper'
 
-describe Content::Pipeline::Filters::Pygments do
+describe Content::Pipeline::Filters::CodeHighlight do
   subject do
     described_class
   end
