@@ -18,10 +18,8 @@ Gem::Specification.new do |spec|
   # --------------------------------------------------------------------------
 
   spec.add_dependency('nokogiri', '~> 1.6.0')
-  spec.add_development_dependency('rake', '~> 10.1.0')
   spec.add_development_dependency('coveralls', '~> 0.6.7')
-  spec.add_development_dependency('pygments.rb', '~> 0.5.1')
+  spec.add_development_dependency('rake', '~> 10.1.0')
   spec.add_development_dependency('rspec', '>= 2.14.0.rc1')
-  spec.add_development_dependency('github-markdown', '~> 0.5.3')
   spec.add_development_dependency("luna-rspec-formatters", ">= 0.0.1")
 end
