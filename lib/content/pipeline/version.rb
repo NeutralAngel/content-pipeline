@@ -1,5 +1,5 @@
 module Content
-  module Pipeline
+  class Pipeline
     VERSION = '0.0.1'
   end
 end
