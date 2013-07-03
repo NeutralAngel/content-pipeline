@@ -25,7 +25,7 @@ describe Content::Pipeline do
     filter.should_receive(:new).with('# Foo', :o1 => 1, :o2 => 2).and_call_original
     filter.any_instance.should_receive(:run).and_call_original
 
-    expect(subject.new(filter,
-      :markdown => {:o1 => 1 }).filter('# Foo', :markdown => { :o2 => 2 })).to eq '<h1>Foo</h1>'
+    expect(subject.new(filter, :markdown => { :o1 => 1 }).
+      filter('# Foo', :markdown => { :o2 => 2 })).to match /<h1[^>]*>Foo<\/h1>/
   end
 end

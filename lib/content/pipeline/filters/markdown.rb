@@ -1,5 +1,3 @@
-require 'github/markdown'
-
 # ----------------------------------------------------------------------------
 # A filter that supports Github-Markdown and also has a few filters to strip
 # the most basic unsafe content, if the user chooses this to be done.
@@ -14,7 +12,17 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
 
   private
   def markdown
-    @str = GitHub::Markdown.to_html(@str, @opts.fetch(:type, :gfm))
+    type = @opts.fetch(:type, ((jruby?) ? (:kramdown) : (:gfm)))
+
+    @str = case
+    when type =~ /\Amarkdown|gfm\Z/
+      require 'github/markdown'
+      GitHub::Markdown.to_html(@str, @opts.fetch(:type, :gfm))
+    else
+      require 'kramdown'
+      fix_kramdown_wraps(Kramdown::Document.
+        new(convert_backtick(@str), :enable_coderay => false).to_html)
+    end
   end
 
   # --------------------------------------------------------------------------
@@ -59,5 +67,23 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
       # Tries to cover single line images wrapped in a paragraph.
       node.parent.children.count == 1 ? node.parent.remove : node.remove
     end
+  end
+
+  # --------------------------------------------------------------------------
+  # Converts Github style backticks over to Portable ~~~.
+  # --------------------------------------------------------------------------
+
+  private
+  def convert_backtick(str)
+    str.gsub(/^`{3}(\s?[a-zA-Z0-9]+)?$/, '~~~\\1')
+  end
+
+  # --------------------------------------------------------------------------
+  # Converts <pre><code class="language-ruby"> to <pre lang="lang">.
+  # --------------------------------------------------------------------------
+
+  private
+  def fix_kramdown_wraps(str)
+    str.gsub(/<pre><code class="language-([A-Za-z0-9]+)">/, '<pre lang="\\1"><code>')
   end
 end

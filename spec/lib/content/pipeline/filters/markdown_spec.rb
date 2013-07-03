@@ -14,6 +14,13 @@ describe Content::Pipeline::Filters::Markdown do
   end
 
   it 'converts content from markdown to HTML' do
-    expect(subject.new("# Foo\n\nBar?").run).to eq "<h1>Foo</h1>\n\n<p>Bar?</p>"
+    expect(subject.new("# Foo\n\nBar?").run).to match /<h1[^>]*>Foo<\/h1>\n\n<p>Bar\?<\/p>/
+  end
+
+  unless jruby?
+    it 'lets you select which markdown you wish to use' do
+      expect(subject.new('# Foo', :type => :gfm).run).to eq '<h1>Foo</h1>'
+      expect(subject.new('# Foo', :type => :kramdown).run).to eq '<h1 id="foo">Foo</h1>'
+    end
   end
 end
