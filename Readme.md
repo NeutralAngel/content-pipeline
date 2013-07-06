@@ -11,6 +11,10 @@ Content pipeline is like `html-pipeline` except it's less restrictive.
 gem install content-pipeline
 ```
 
+```
+gem 'content-pipeline', '~> <VERSION>'
+```
+
 ## Usage
 
 Content Pipeline is extremely simple to use out of the box:
