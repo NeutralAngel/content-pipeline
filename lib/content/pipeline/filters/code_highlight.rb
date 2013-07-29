@@ -1,4 +1,4 @@
-require 'pygments' unless jruby?
+require "pygments" unless jruby?
 
 # ----------------------------------------------------------------------------
 # A filter that discovers pre tags and then syntax highlights them, also
@@ -41,7 +41,7 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
     @str = @str.to_nokogiri_fragment
     @str.search('pre').each do |node|
       node.replace Templates[:wrap] %
-        wrap(pygments(node.inner_text, node[:lang]), node[:lang] || 'text')
+        wrap(pygments(node.inner_text, node[:lang]), node[:lang] || "text")
     end
   end
 
@@ -51,7 +51,7 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
 
   private
   def wrap(str, lang)
-    lines, numbs = '', ''; str.each_line.with_index(1) do |line, numb|
+    lines, numbs = "", ""; str.each_line.with_index(1) do |line, numb|
       lines+= Templates[:line] % line
       numbs+= Templates[:numb] % numb
     end

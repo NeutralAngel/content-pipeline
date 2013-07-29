@@ -47,8 +47,8 @@ class Content::Pipeline
   # --------------------------------------------------------------------------
 
   module Filters
-    require_relative 'filters/code_highlight'
-    require_relative 'filters/markdown'
+    require_relative "filters/code_highlight"
+    require_relative "filters/markdown"
 
     # ------------------------------------------------------------------------
     # A set of default filters that we use if the user does not supply their

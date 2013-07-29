@@ -16,12 +16,12 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
 
     @str = case
     when type =~ /\Amarkdown|gfm\Z/
-      require 'github/markdown'
-      GitHub::Markdown.to_html(@str, @opts.fetch(:type, :gfm))
+      require "github/markdown"
+      GitHub::Markdown.to_html(@str, @opts.fetch(:type, :gfm)).strip
     else
-      require 'kramdown'
+      require "kramdown"
       fix_kramdown_wraps(Kramdown::Document.
-        new(convert_backtick(@str), :enable_coderay => false).to_html)
+        new(convert_backtick(@str), :enable_coderay => false).to_html).strip
     end
   end
 
@@ -52,7 +52,7 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
 
   private
   def strip_links
-    @str.search('a').each do |node|
+    @str.search("a").each do |node|
       node.replace(node[:href])
     end
   end
@@ -63,7 +63,7 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
 
   private
   def strip_image
-    @str.search('img').each do |node|
+    @str.search("img").each do |node|
       # Tries to cover single line images wrapped in a paragraph.
       node.parent.children.count == 1 ? node.parent.remove : node.remove
     end
@@ -75,7 +75,7 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
 
   private
   def convert_backtick(str)
-    str.gsub(/^`{3}(\s?[a-zA-Z0-9]+)?$/, '~~~\\1')
+    str.gsub(/^`{3}(\s?[a-zA-Z0-9]+)?$/, "~~~\\1")
   end
 
   # --------------------------------------------------------------------------

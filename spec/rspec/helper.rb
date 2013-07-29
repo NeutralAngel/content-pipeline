@@ -1,17 +1,13 @@
-module RSpec
-  def self.root
-    Pathname.new(File.expand_path("../../", __FILE__))
-  end
-end
+require_relative "../support/simplecov"
+require "luna/rspec/formatters/checks"
+require "rspec/expect_error"
+require "content/pipeline"
+require "rspec"
 
-require_relative '../support/simplecov'
-require 'content/pipeline'
-require 'rspec'
-
-Dir[RSpec.root.join("support/**/*.rb")].each do |f|
-  require_relative f
+Dir[File.expand_path("../../support/**/*.rb", __FILE__)].each do |f|
+  require f
 end
 
 RSpec.configure do |config|
-  config.order = 'random'
+  config.order = "random"
 end

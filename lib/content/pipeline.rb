@@ -1,6 +1,6 @@
-require_relative 'pipeline/core_extensions/object_ext'
-require_relative 'pipeline/core_extensions/hash_ext'
-$:.unshift(File.expand_path('../../', __FILE__))
+require_relative "pipeline/core_extensions/object_ext"
+require_relative "pipeline/core_extensions/hash_ext"
+$:.unshift(File.expand_path("../../", __FILE__))
 
 module Content
 
@@ -11,15 +11,13 @@ module Content
   # --------------------------------------------------------------------------
 
   class Pipeline
-    require_relative 'pipeline/filters'
+    require_relative "pipeline/filters"
     attr_reader :filters, :opts
 
     # ------------------------------------------------------------------------
     # Allows the user to initialize with a custom set of filters or to auto
     # load our filters and use them, the base filters we provider are
     # redcarpet and pygments.
-    #
-    # @opt filters [Array] a list of filters to use.
     # ------------------------------------------------------------------------
 
     def initialize(filters = Filters::DEFAULT_FILTERS, opts = nil)
