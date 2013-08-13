@@ -1,5 +1,4 @@
 require "rspec/helper"
-require "pry"
 
 describe Content::Pipeline::Filters::CodeHighlight do
   subject do
