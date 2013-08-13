@@ -54,3 +54,6 @@ better than the other, it's done so that people can remain agnostic.*
 ### Content::Pipeline::Filters::CodeHighlight
 
 The code highlight filter allows you to highlight code, with or without Pygments.  If Pygments is supported it will require it and syntax highlight, otherwise it will simply wrap your code in the normal code style and not syntax highlight it.  You will still have the line numbers, just not the fancy syntax highlight.
+
+Options:
+* `:default` - The default syntax language -- If not defined it will default to "ruby".

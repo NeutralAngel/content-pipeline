@@ -40,8 +40,8 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
   def highlight
     @str = @str.to_nokogiri_fragment
     @str.search('pre').each do |node|
-      node.replace Templates[:wrap] %
-        wrap(pygments(node.inner_text, node[:lang]), node[:lang] || "text")
+      lang = node[:lang] || @opts[:default] || "ruby"
+      node.replace Templates[:wrap] % wrap(pygments(node.inner_text, lang), lang)
     end
   end
 
@@ -66,6 +66,7 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
   private
   def pygments(str, lang)
     return str if jruby? || !Pygments::Lexer[lang]
+    # Protects you against a possible Pygments error.
     Pygments::Lexer[lang].highlight(str) =~ Matcher ? $1 : str
   end
 end
