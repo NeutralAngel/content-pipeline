@@ -6,10 +6,8 @@ group :development do
     gem "pry"
   end
 
-  gem "envygeeks-coveralls"
   gem "kramdown"
   gem "rake"
-  gem "luna-rspec-formatters"
 
   unless RbConfig::CONFIG["ruby_install_name"] == "jruby"
     gem "pygments.rb"
