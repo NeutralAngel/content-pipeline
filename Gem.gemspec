@@ -19,5 +19,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency("nokogiri", "~> 1.6.0")
   spec.add_development_dependency("rspec", "~> 2.14")
-  spec.add_development_dependency("rspec-expect_error", "0.0.2")
+  spec.add_development_dependency("rspec-expect_error", "0.0.4")
 end
