@@ -7,7 +7,6 @@ module CoreExtensions
   # --------------------------------------------------------------------------
 
   module ObjectExt
-
     def jruby?
       RbConfig::CONFIG["ruby_install_name"] == "jruby"
     end
@@ -17,8 +16,7 @@ module CoreExtensions
     # ------------------------------------------------------------------------
 
     def to_nokogiri_fragment
-      return self if Nokogiri::HTML::DocumentFragment === self
-      Nokogiri::HTML.fragment(respond_to?(:to_html) ? to_html : to_s)
+      Nokogiri::HTML.fragment(self.to_s)
     end
   end
 end
