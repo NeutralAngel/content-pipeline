@@ -12,7 +12,7 @@ module CoreExtensions
 
     def deep_merge(new_hash)
       merge(new_hash) do |k, o, n|
-        Hash === o && Hash === n ? o.deep_merge(n) : n
+        Hash === o && n.is_a?(Hash) ? o.deep_merge(n) : n
       end
     end
   end
