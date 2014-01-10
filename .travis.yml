@@ -1,13 +1,10 @@
 rvm:
   - 2.0.0
-  - 1.9.3
-  - rbx
-  - jruby-19mode
+  - 2.1.0
+  - jruby
 notifications:
   recipients:
     - envygeeks@gmail.com
 branches:
   only:
     - master
-git:
-  strategy: tarball
