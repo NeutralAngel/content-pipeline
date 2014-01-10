@@ -1,9 +1,10 @@
 require "pygments" unless jruby?
 
-# ----------------------------------------------------------------------------
-# A filter that discovers pre tags and then syntax highlights them, also
-# allowing for fallback to just wrapping them so they stay consistent.
-# ----------------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# A filter that discovers pre tags and then syntax highlights them,
+# also allowing for fallback to just wrapping them so they stay
+# consistent.
+# ---------------------------------------------------------------------
 
 class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
   add_filter :highlight
@@ -32,9 +33,9 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
     HTML
   }
 
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
   # Searches for elements we want to transform and transforms them.
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
 
   private
   def highlight
@@ -45,9 +46,9 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
     end
   end
 
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
   # Goes through each line and wraps it as well as creates line numbers.
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
 
   private
   def wrap(str, lang)
@@ -59,9 +60,9 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
     [numbs, lang, lines]
   end
 
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
   # Wraps around Pygments catching a timeout error so that it can cont.
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
 
   private
   def pygments(str, lang)

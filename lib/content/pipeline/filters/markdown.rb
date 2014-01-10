@@ -1,14 +1,15 @@
-# ----------------------------------------------------------------------------
-# A filter that supports Github-Markdown and also has a few filters to strip
-# the most basic unsafe content, if the user chooses this to be done.
-# ----------------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# A filter that supports Github-Markdown and also has a few filters to
+# strip the most basic unsafe content, if the user chooses this to be
+# done.
+# ---------------------------------------------------------------------
 
 class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
   add_filter :markdown, :strip_html
 
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
   # Parse Markdown content.
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
 
   private
   def markdown
@@ -20,19 +21,20 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
       GitHub::Markdown.to_html(@str, @opts.fetch(:type, :gfm)).strip
     else
       require "kramdown"
-      fix_kramdown_wraps(Kramdown::Document.
-        new(convert_backtick(@str), :enable_coderay => false).to_html).strip
+      fix_kramdown_wraps(Kramdown::Document.new(
+        convert_backtick(@str), :enable_coderay => false).to_html).strip
     end
   end
 
-  # --------------------------------------------------------------------------
-  # Discovers private methods that start with strip_ and runs them if the
-  # filter is in safe mode.  Which will strip certain tags from the data.
+  # -------------------------------------------------------------------
+  # Discovers private methods that start with strip_ and runs them if
+  # the filter is in safe mode.  Which will strip certain tags from the
+  # data.
   #
-  # Doing it this way allows us to allow people to extend this class and add
-  # what they wish to it, while us preventing them from monkey patching key
-  # methods and having to keep those up-to-date.
-  # --------------------------------------------------------------------------
+  # Doing it this way allows us to allow people to extend this class
+  # and add what they wish to it, while us preventing them from monkey
+  # patching key methods and having to keep those up-to-date.
+  # -------------------------------------------------------------------
 
   private
   def strip_html
@@ -46,9 +48,9 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
     end
   end
 
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
   # Strip anchor tags.
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
 
   private
   def strip_links
@@ -57,9 +59,9 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
     end
   end
 
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
   # Strip image tags.
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
 
   private
   def strip_image
@@ -69,18 +71,18 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
     end
   end
 
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
   # Converts Github style backticks over to Portable ~~~.
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
 
   private
   def convert_backtick(str)
     str.gsub(/^`{3}(\s?[a-zA-Z0-9]+)?$/, "~~~\\1")
   end
 
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
   # Converts <pre><code class="language-ruby"> to <pre lang="lang">.
-  # --------------------------------------------------------------------------
+  # -------------------------------------------------------------------
 
   private
   def fix_kramdown_wraps(str)
