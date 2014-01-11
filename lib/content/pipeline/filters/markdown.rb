@@ -1,39 +1,29 @@
-# ---------------------------------------------------------------------
-# A filter that supports Github-Markdown and also has a few filters to
-# strip the most basic unsafe content, if the user chooses this to be
-# done.
-# ---------------------------------------------------------------------
-
 class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
   add_filter :markdown, :strip_html
 
-  # -------------------------------------------------------------------
-  # Parse Markdown content.
+  private
+  def default_markdown
+    (jruby?) ? :kramdown : :gfm
+  end
+
   # -------------------------------------------------------------------
 
   private
   def markdown
-    type = @opts.fetch(:type, ((jruby?) ? (:kramdown) : (:gfm)))
+    type = @opts.fetch(:type, default_markdown)
+    @str = convert_backtick(@str)
 
     @str = case
     when type =~ /\Amarkdown|gfm\Z/
       require "github/markdown"
-      GitHub::Markdown.to_html(@str, @opts.fetch(:type, :gfm)).strip
+      GitHub::Markdown.to_html(@str, type).strip
     else
       require "kramdown"
-      fix_kramdown_wraps(Kramdown::Document.new(
-        convert_backtick(@str), :enable_coderay => false).to_html).strip
+      str = Kramdown::Document.new(@str, :enable_coderay => false)
+      normalize_kramdown(str.to_html).strip
     end
   end
 
-  # -------------------------------------------------------------------
-  # Discovers private methods that start with strip_ and runs them if
-  # the filter is in safe mode.  Which will strip certain tags from the
-  # data.
-  #
-  # Doing it this way allows us to allow people to extend this class
-  # and add what they wish to it, while us preventing them from monkey
-  # patching key methods and having to keep those up-to-date.
   # -------------------------------------------------------------------
 
   private
@@ -49,30 +39,23 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
   end
 
   # -------------------------------------------------------------------
-  # Strip anchor tags.
-  # -------------------------------------------------------------------
 
   private
   def strip_links
-    @str.search("a").each do |node|
-      node.replace(node[:href])
+    @str.search("a").each do |n|
+      n.replace(n[:href])
     end
   end
 
-  # -------------------------------------------------------------------
-  # Strip image tags.
   # -------------------------------------------------------------------
 
   private
   def strip_image
-    @str.search("img").each do |node|
-      # Tries to cover single line images wrapped in a paragraph.
-      node.parent.children.count == 1 ? node.parent.remove : node.remove
+    @str.search("img").each do |n|
+      n.parent.children.count == 1 ? n.parent.remove : n.remove
     end
   end
 
-  # -------------------------------------------------------------------
-  # Converts Github style backticks over to Portable ~~~.
   # -------------------------------------------------------------------
 
   private
@@ -81,11 +64,9 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
   end
 
   # -------------------------------------------------------------------
-  # Converts <pre><code class="language-ruby"> to <pre lang="lang">.
-  # -------------------------------------------------------------------
 
   private
-  def fix_kramdown_wraps(str)
+  def normalize_kramdown(str)
     str.gsub(/<pre><code class="language-([A-Za-z0-9]+)">/, '<pre lang="\\1"><code>')
   end
 end
