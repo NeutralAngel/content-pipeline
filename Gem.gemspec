@@ -13,9 +13,9 @@ Gem::Specification.new do |spec|
   spec.authors = "Jordon Bedwell"
   spec.email = "envygeeks@gmail.com"
 
-  spec.add_dependency("nokogiri", "~> 1.6.0")
+  spec.add_dependency("nokogiri", "~> 1.6.1")
   spec.add_development_dependency("rspec", "~> 2.14")
-  spec.add_development_dependency("rspec-expect_error", "~> 0.0")
-  spec.add_development_dependency("envygeeks-coveralls", "~> 0.1")
-  spec.add_development_dependency("luna-rspec-formatters", "~> 0.4")
+  spec.add_development_dependency("rspec-expect_error")
+  spec.add_development_dependency("envygeeks-coveralls")
+  spec.add_development_dependency("luna-rspec-formatters")
 end
