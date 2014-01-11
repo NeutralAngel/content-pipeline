@@ -20,8 +20,17 @@ gem 'content-pipeline', '~> <VERSION>'
 Content Pipeline is extremely simple to use out of the box:
 
 ```ruby
-pipeline = Content::Pipeline.new([ MyFilter ], :my_filter => { :o1 => true })
-pipeline.filter('# Markdown', :my_filter => { :o1 => false })
+pipeline = Content::Pipeline.new([ MyFilter ], {
+  :my_filter => {
+    :o1 => true
+  }
+})
+
+pipeline.filter('# Markdown', {
+  :my_filter => {
+    :o1 => false
+  }
+})
 ```
 
 ```ruby
