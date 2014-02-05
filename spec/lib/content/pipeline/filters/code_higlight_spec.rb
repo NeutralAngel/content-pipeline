@@ -25,4 +25,13 @@ describe Content::Pipeline::Filters::CodeHighlight do
       expect(o.search("#{css}>td.code>pre>code.text>span.line").count).to eq 1
     end
   end
+
+  context "opt[:gutter] = false" do
+    it "doesn't add the gutter with line numbers" do
+      Nokogiri::HTML.fragment(described_class.new(code, :gutter => false).run).tap do |o|
+        expect(o.search("#{css}>td.gutter>pre> span.line-number")).to have(0).items
+        expect(o.search("#{css}>td.code>pre>code.ruby>span.line")).to have(1).item
+      end
+    end
+  end
 end

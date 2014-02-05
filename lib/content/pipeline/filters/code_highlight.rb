@@ -7,15 +7,13 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
   Templates = {
     :numb => %Q{<span class="line-number">%s</span>\n},
     :line => '<span class="line">%s</span>',
-    :wrap => <<-HTML
+    :wrap => <<-HTML,
       <figure class="code">
         <div class="highlight">
           <table>
             <tbody>
               <tr>
-                <td class="gutter">
-                  <pre>%s</pre>
-                </td>
+                %s
                 <td class="code">
                   <pre><code class="%s">%s</code></pre>
                 </td>
@@ -25,7 +23,20 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
         </div>
       </figure>
     HTML
+
+    :gutter => <<-HTML
+      <td class="gutter">
+        <pre>%s</pre>
+      </td>
+    HTML
   }
+
+  # -------------------------------------------------------------------
+
+  def initialize(*args)
+    super(*args)
+    @opts[:gutter] = true if @opts[:gutter].nil?
+  end
 
   # -------------------------------------------------------------------
 
@@ -42,12 +53,29 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
 
   private
   def wrap(str, lang)
-    lines, numbs = "", ""; str.each_line.with_index(1) do |line, numb|
+    lines, numbs = "", ""
+
+    str.each_line.with_index(1) do |line, numb|
       lines+= Templates[:line] % line
-      numbs+= Templates[:numb] % numb
+
+      if @opts[:gutter]
+        numbs+= Templates[:numb] % numb
+      end
     end
 
-    [numbs, lang, lines]
+    if @opts[:gutter]
+      [
+        Templates[:gutter] % numbs,
+        lang,
+        lines
+      ]
+    else
+      [
+        "",
+        lang,
+        lines
+      ]
+    end
   end
 
   # -------------------------------------------------------------------
