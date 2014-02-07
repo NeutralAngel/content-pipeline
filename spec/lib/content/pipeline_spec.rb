@@ -12,6 +12,18 @@ describe Content::Pipeline do
     }
   end
 
+  describe "#to_opt" do
+    let(:filter) do
+      described_class::Filters::CodeHighlight
+    end
+
+    it "allows single word and underscore opts" do
+      expect(described_class.new(filter).send(:to_opt, filter)).to eq [
+        :codehighlight, :code_highlight
+      ]
+    end
+  end
+
   describe "opts" do
     it "populates" do
       expect(described_class.new(filter, opts).opts).to eq({
