@@ -17,7 +17,13 @@ module Content
     def filter(out, opts = {})
       opts = @opts.deep_merge(opts)
       @filters.each do |f|
-        out = f.new(out, opts[to_opt(f)]).run
+        out_opts = opts.values_at(*to_opt(f).uniq)
+        out_opts = out_opts.map do |v|
+          v || {}
+        end
+
+        out_opts = out_opts.reduce(Hash.new, :merge)
+        out = f.new(out, out_opts).run
       end
 
     out
@@ -26,8 +32,16 @@ module Content
     # -----------------------------------------------------------------
 
     private
-    def to_opt(cls)
-      cls.name.split(/::/).last.downcase.to_sym
+    def to_opt(cls, alt = false)
+      cls = cls.name.split(/::/).last
+      out = [
+        cls.downcase,
+        cls[0].downcase + cls[1..-1].gsub(/([A-Z])/) do
+          "_" + $1.downcase
+        end
+      ]
+
+      out.map(&:to_sym)
     end
   end
 end
