@@ -5,9 +5,16 @@ describe Content::Pipeline do
     described_class::Filters::Markdown
   end
 
+  let(:opts) do
+    {
+      :o1 => 1,
+      :o2 => 2
+    }
+  end
+
   describe "opts" do
     it "populates" do
-      expect(described_class.new(filter, :o1 => 1, :o2 => 2).opts).to eq({
+      expect(described_class.new(filter, opts).opts).to eq({
         :o1 => 1,
         :o2 => 2
       })
@@ -27,7 +34,7 @@ describe Content::Pipeline do
     end
 
     it "runs" do
-      filter.should_receive(:new).with("# Foo", :o1 => 1, :o2 => 2).and_call_original
+      filter.should_receive(:new).with("# Foo", opts).and_call_original
       filter.any_instance.should_receive(:run).and_call_original
 
       obj = described_class.new(filter, {
@@ -36,7 +43,8 @@ describe Content::Pipeline do
         }
       })
 
-      expect(obj.filter("# Foo", :markdown => { :o2 => 2 })).to match /<h1[^>]*>Foo<\/h1>/
+      expect(obj.filter("# Foo", :markdown => { :o2 => 2 })).to match \
+        /<h1[^>]*>Foo<\/h1>/
     end
   end
 end
