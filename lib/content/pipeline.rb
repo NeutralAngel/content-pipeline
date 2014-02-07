@@ -17,13 +17,8 @@ module Content
     def filter(out, opts = {})
       opts = @opts.deep_merge(opts)
       @filters.each do |f|
-        out_opts = opts.values_at(*to_opt(f).uniq)
-        out_opts = out_opts.map do |v|
-          v || {}
-        end
-
-        out_opts = out_opts.reduce(Hash.new, :merge)
-        out = f.new(out, out_opts).run
+        out_opts = opts.values_at(*to_opt(f)).delete_if(&:nil?)
+        out = f.new(out, out_opts.reduce(Hash.new, :merge)).run
       end
 
     out
@@ -41,7 +36,7 @@ module Content
         end
       ]
 
-      out.map(&:to_sym)
+      out.uniq.map(&:to_sym)
     end
   end
 end
