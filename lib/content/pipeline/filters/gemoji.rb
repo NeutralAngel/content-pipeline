@@ -3,7 +3,7 @@ require "gemoji"
 class Content::Pipeline::Filters::Gemoji < Content::Pipeline::Filter
   EmojiPattern = /\B:(#{Emoji.names.map { |n| Regexp.escape(n) }.join("|")}):\B/
   EmojiTag = %Q{<img class="emoji" src="%s" alt=":%s:" height="20" width="20">}
-  EmojiLiquidTag = %{{%%img "%s" ":%s:" %%}}
+  EmojiLiquidTag = '{%%img "%s" ":%s:" %%}'
 
   # -------------------------------------------------------------------
 
