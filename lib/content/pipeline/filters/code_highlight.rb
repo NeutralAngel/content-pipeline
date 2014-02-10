@@ -1,7 +1,11 @@
 require "pygments" unless jruby?
 
 class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
-  add_filter :highlight
+  add_filter({
+    :highlight => :nokogiri
+  })
+
+  # -------------------------------------------------------------------
 
   Matcher = /<pre>(.+)<\/pre>/m
   Templates = {
@@ -50,39 +54,41 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
   end
 
   # -------------------------------------------------------------------
+  # @arg String: The "multi-line" string you wish to parse.
+  # @arg String: The "programming language" you wish to highlight as.
+  # -------------------------------------------------------------------
 
   private
   def wrap(str, lang)
     lines, numbs = "", ""
 
-    str.each_line.with_index(1) do |line, numb|
-      lines+= Templates[:line] % line
+    str.each_line.with_index(1) do |l, n|
+      lines+= Templates[:line] % l
 
       if @opts[:gutter]
-        numbs+= Templates[:numb] % numb
+        numbs+= Templates[:numb] % n
       end
     end
 
-    if @opts[:gutter]
+    if ! @opts[:gutter]
       [
-        Templates[:gutter] % numbs,
-        lang,
-        lines
+        numbs, lang, lines
       ]
     else
       [
-        "",
-        lang,
-        lines
+        Templates[:gutter] % numbs, lang, lines
       ]
     end
   end
 
   # -------------------------------------------------------------------
+  # @arg String: The "multi-line" string you wish to highlight.
+  # @arg String: The lang you wish to use when highlighting the string.
+  # -------------------------------------------------------------------
 
   private
   def pygments(str, lang)
-    return str if jruby? || !Pygments::Lexer[lang]
+    return str if jruby? || ! Pygments::Lexer[lang]
     Pygments::Lexer[lang].highlight(str) =~ Matcher ? $1 : str
   end
 end

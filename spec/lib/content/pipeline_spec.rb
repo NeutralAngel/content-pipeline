@@ -1,9 +1,8 @@
 require "rspec/helper"
 
 describe Content::Pipeline do
-  let(:filter) do
-    described_class::Filters::Markdown
-  end
+  let(:filter) { subject::Filters::Markdown }
+  subject { described_class }
 
   let(:opts) do
     {
@@ -12,51 +11,40 @@ describe Content::Pipeline do
     }
   end
 
-  describe "#to_opt" do
-    let(:filter) do
-      described_class::Filters::CodeHighlight
-    end
+  it "allows a custom set of filters" do
+    expect(subject.new(filter).filters).to eq [
+      filter
+    ]
+  end
 
-    it "allows single word and underscore opts" do
-      expect(described_class.new(filter).send(:to_opt, filter)).to eq [
+  describe "#initialize" do
+    it "allows opts as the first arg instead of filters:[]" do
+      expect(subject.new(opts).opts).to eq(opts)
+      expect(subject.new(opts).filters).not_to be_empty
+    end
+  end
+
+  it "runs filters" do
+    filter.should_receive(:new).with("# Foo", anything()).and_call_original
+    filter.any_instance.should_receive(:run).and_call_original
+    expect(subject.new(filter).filter("# Foo")).to match /<h1[^>]*>Foo<\/h1>/
+  end
+
+  describe "#to_opt" do
+    let(:filter) { subject::Filters::CodeHighlight }
+
+    it "outputs single_word and singleword from SingleWord" do
+      expect(subject.new.send(:to_opt, filter)).to eq [
         :codehighlight, :code_highlight
       ]
     end
   end
 
-  describe "opts" do
-    it "populates" do
-      expect(described_class.new(filter, opts).opts).to eq({
-        :o1 => 1,
-        :o2 => 2
-      })
-    end
+  it "populates #opts" do
+    expect(subject.new(filter, opts).opts).to eq(opts)
   end
 
-  describe "filters" do
-    it "populates customs" do
-      expect(described_class.new(filter).filters).to eq [
-        filter
-      ]
-    end
-
-    it "populates defaults" do
-      expect(described_class.new.filters).to \
-        eq described_class::Filters::DEFAULT_FILTERS
-    end
-
-    it "runs" do
-      filter.should_receive(:new).with("# Foo", opts).and_call_original
-      filter.any_instance.should_receive(:run).and_call_original
-
-      obj = described_class.new(filter, {
-        :markdown => {
-          :o1 => 1
-        }
-      })
-
-      expect(obj.filter("# Foo", :markdown => { :o2 => 2 })).to match \
-        /<h1[^>]*>Foo<\/h1>/
-    end
+  it "populates #filters" do
+    expect(subject.new.filters).to eq subject::Filters::DEFAULT_FILTERS
   end
 end

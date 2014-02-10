@@ -1,6 +1,8 @@
 require "rspec/helper"
 
 describe Content::Pipeline::Filters::Markdown do
+  subject { described_class }
+
   context "with safe enabled" do
     subject do
       Content::Pipeline.new([ described_class ], {
@@ -19,16 +21,15 @@ describe Content::Pipeline::Filters::Markdown do
     end
   end
 
-
   it "converts content from markdown to HTML" do
     result = /<h1[^>]*>Foo<\/h1>\n\n<p>Bar\?<\/p>/
-    expect(described_class.new("# Foo\n\nBar?").run).to match result
+    expect(subject.new("# Foo\n\nBar?").run).to match result
   end
 
   unless jruby?
     it "lets you select which markdown you wish to use" do
-      expect(described_class.new("# Foo", :type => :gfm).run).to eq "<h1>Foo</h1>"
-      expect(described_class.new("# Foo", :type => :kramdown).run).to eq '<h1 id="foo">Foo</h1>'
+      expect(subject.new("# Foo", :type => :gfm).run).to eq "<h1>Foo</h1>"
+      expect(subject.new("# Foo", :type => :kramdown).run).to eq '<h1 id="foo">Foo</h1>'
     end
   end
 end

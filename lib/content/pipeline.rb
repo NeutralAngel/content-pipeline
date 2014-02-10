@@ -29,10 +29,12 @@ module Content
     # -----------------------------------------------------------------
 
     def filter(out, opts = {})
+      return out if out.nil? || out.empty? || @filters.empty?
+
       opts = @opts.deep_merge(opts)
       @filters.each_with_index do |f, i|
-        fopts = opts.values_at(*to_opt(f)). \
-          delete_if(&:nil?).reduce(Hash.new, :merge)
+        fopts = opts.values_at(*to_opt(f)).delete_if(&:nil?). \
+          reduce({}, :merge)
 
         out = f.new(out, fopts).run(@filters[i + 1])
       end
@@ -47,14 +49,21 @@ module Content
     private
     def to_opt(cls)
       cls = cls.name.split(/::/).last
-      out = [
-        cls.downcase,
-        cls[0].downcase + cls[1..-1].gsub(/([A-Z])/) do
-          "_" + $1.downcase
-        end
-      ]
 
-      out.uniq.map(&:to_sym)
+      [
+        cls.downcase,
+        underscore_cls(cls) ].uniq.map(&:to_sym)
+    end
+
+    # -----------------------------------------------------------------
+    # @arg String: The name of the class you wish to adjust.
+    # -----------------------------------------------------------------
+
+    private
+    def underscore_cls(cls)
+      (cls[0].downcase + cls[1..-1]).gsub(/([A-Z])/) do
+        "_" + $1.downcase
+      end
     end
   end
 end
