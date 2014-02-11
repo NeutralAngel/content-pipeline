@@ -38,6 +38,20 @@ describe Content::Pipeline::Filters::Gemoji do
     end
   end
 
+  it "does not go bat-shit crazy and replace all :: stuff" do
+    expect(subject.new('<img alt=":smile:">').run).to eq '<img alt=":smile:">'
+  end
+
+  it "does Gemoji on multi-line strings" do
+    subject.new(":smile:\n:smile:").run.to_nokogiri_fragment.tap do |o|
+      expect(results = o.search(">img")).to have(2).items
+      results.each do |r|
+        expect(r.attr(:alt)).to eq ":smile:"
+        expect(r.attr(:src)).to eq "/assets/smile.png"
+      end
+    end
+  end
+
   it "does Gemoji normal strings" do
     subject.new(":smile:").run.to_nokogiri_fragment.tap do |o|
       expect(result = o.search(">img")).to have(1).item
@@ -49,8 +63,8 @@ describe Content::Pipeline::Filters::Gemoji do
   it "does Gemoji on HTML strings" do
     subject.new("<p>:smile:</p>").run.to_nokogiri_fragment.tap do |o|
       expect(result = o.search(">p>img")).to have(1).item
-      expect(result.first.attr(:src)).to eq "/assets/smile.png"
       expect(result.first.attr(:alt)).to eq ":smile:"
+      expect(result.first.attr(:src)).to eq "/assets/smile.png"
     end
   end
 

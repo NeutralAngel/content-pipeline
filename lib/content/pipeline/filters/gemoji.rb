@@ -1,9 +1,10 @@
 require "gemoji"
+require "pry"
 
 class Content::Pipeline::Filters::Gemoji < Content::Pipeline::Filter
-  EmojiPattern = /\B:(#{Emoji.names.map { |n| Regexp.escape(n) }.join("|")}):\B/
+  EmojiPattern = /(?:^\s*|\s+):(#{Emoji.names.map { |n| Regexp.escape(n) }.join("|")}):(?:\s+|\s*$)/m
   EmojiTag = %Q{<img class="emoji" src="%s" alt=":%s:" height="20" width="20">}
-  EmojiLiquidTag = '{%%img "%s" ":%s:" %%}'
+  EmojiLiquidTag = %Q{{%%img "%s" ":%s:" %%}}
 
   # -------------------------------------------------------------------
 
@@ -48,14 +49,14 @@ class Content::Pipeline::Filters::Gemoji < Content::Pipeline::Filter
 
     # Because it's no more performant than 40 objs.
     node.replace(node.to_html.gsub(EmojiPattern) do
-      ep = "#{@opts[:asset_path].chomp("/")}/#{$1}.png"
-      en = $1
+      name = $1.dup
+
+      ep = "#{@opts[:asset_path].chomp("/")}/#{name}.png"
+      en = name
 
       if ! @opts[:tag] && ! @opts[:tag].is_a?(Proc)
         if @opts[:as_liquid_asset]
-          EmojiLiquidTag % [
-            ep, en
-          ]
+          EmojiLiquidTag % [ep,en]
         else
           EmojiTag % [
             ep, en
