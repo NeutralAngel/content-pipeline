@@ -1,5 +1,4 @@
 require "gemoji"
-require "pry"
 
 class Content::Pipeline::Filters::Gemoji < Content::Pipeline::Filter
   EmojiPattern = /(?:^\s*|\s+):(#{Emoji.names.map { |n| Regexp.escape(n) }.join("|")}):(?:\s+|\s*$)/m
