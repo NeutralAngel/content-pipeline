@@ -90,7 +90,7 @@ Options:
 
 ### Content::Pipeline::Filters::Gemoji
 
-The Gemoji filter allows you to convert :gemoji: into image tags, liquid addet tags and if you really really need it, a custom tag by sending a proc.  By default it will use the path `/asset` which can be ovverriden.
+The Gemoji filter allows you to convert `:gemoji:` into image tags, liquid asset tags and if you really really need it, a custom tag by sending a proc.  By default it will use the path `/asset` which can be overriden.
 
 * `:as_liquid_asset` - `nil`
 * `:tag` - `Proc` - 2args - path, name.
