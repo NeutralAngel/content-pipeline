@@ -49,14 +49,14 @@ class Content::Pipeline::Filters::Gemoji < Content::Pipeline::Filter
 
     # Because it's no more performant than 40 objs.
     node.replace(node.to_html.gsub(EmojiPattern) do
-      name = $1.dup
-
-      ep = "#{@opts[:asset_path].chomp("/")}/#{name}.png"
-      en = name
+      ep = "#{@opts[:asset_path].chomp("/")}/#{$1}.png"
+      en = $1
 
       if ! @opts[:tag] && ! @opts[:tag].is_a?(Proc)
         if @opts[:as_liquid_asset]
-          EmojiLiquidTag % [ep,en]
+          EmojiLiquidTag % [
+            ep, en
+          ]
         else
           EmojiTag % [
             ep, en
