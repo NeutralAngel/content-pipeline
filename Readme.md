@@ -20,6 +20,11 @@ gem 'content-pipeline', '~> <VERSION>'
 Content Pipeline is extremely simple to use out of the box:
 
 ```ruby
+
+# ---------------------------------------------------------------------
+# With custom filters and global-filter options + per-filter options.
+# ---------------------------------------------------------------------
+
 pipeline = Content::Pipeline.new([ MyFilter ], {
   :my_filter => {
     :o1 => true
@@ -31,15 +36,31 @@ pipeline.filter('# Markdown', {
     :o1 => false
   }
 })
+
+# ---------------------------------------------------------------------
+# With only global-filter options + per-filter options.
+# ---------------------------------------------------------------------
+
+pipeline = Content::Pipeline.new({
+  :my_filter => {
+    :o1 => true
+  }
+})
+
+pipeline.filter("# Markdown", {
+  :my_filter => {
+    :o1 => false
+  }
+})
 ```
 
 ```ruby
 Content::Pipeline.new.filter('# Markdown')
 ```
 
-* Supports multiple Markdowns.
 * Supports global options with overrides.
-* By default uses both `CodeHighlight` and `Markdown`.
+* By default uses `CodeHighlight`, `Markdown`, `Gemoji`.
+* Supports multiple Markdowns.
 
 *It should be noted that if you send a list of filters you wish to use, it will not use the default filters at all.  So where you see `[ MyFilter ]` that will be the only filter that is ran, since it automatically assumes this is the pipeline you wish to use.*
 
@@ -47,15 +68,15 @@ Content::Pipeline.new.filter('# Markdown')
 
 Filter options are set globally and can be overriden each time the filter is ran, this allows for you to setup a single pipeline and then adjust it on the fly on a per-content basis, for example if you wish to run `Markdown` `:safe` on user comments but not on posts, then you would simply setup the global pipeline and then each time you parse a user comment send the content with the hash `{ :markdown => { :safe => true }}`.
 
-*All options are keyed based on their class name, so `MyFilter` would have the option key `:my_filter`*
+*All options are keyed based on their class name, so `MyFilter` would have the option key `:my_filter` but it also supports `:myfilter`*
 
 ### Content::Pipeline::Filters::Markdown
 
 The Markdown filter allows you to choose between `github-markdown` and `kramdown`, and by default will use `kramdown` on jRuby and `github-markdown` on any other Ruby that supports it.  **These dependencies are loose, which means you must install the one you wish to use.**
 
 Options:
-* `:type` => [`:gfm`, `:markdown`, `:kramdown`] - The Markdown filter you wish to use.
-* `:safe` => [`true`, `false`] - Does basic filtering, removes images and strips autolinked anchors.
+* `:type` => [`:gfm`, `:markdown`, `md`, `:kramdown`]
+* `:safe` => [`true`, `false`]
 
 *You should not need to adjust any of your "\`\`\`" because the `Markdown` filter will automatically convert those to `~~~` if you choose Kramdown.  This is not done because one way is
 better than the other, it's done so that people can remain agnostic.*
@@ -65,4 +86,12 @@ better than the other, it's done so that people can remain agnostic.*
 The code highlight filter allows you to highlight code, with or without Pygments.  If Pygments is supported it will require it and syntax highlight, otherwise it will simply wrap your code in the normal code style and not syntax highlight it.  You will still have the line numbers, just not the fancy syntax highlight.
 
 Options:
-* `:default` - The default syntax language -- If not defined it will default to "ruby".
+* `:default` - `:ruby`
+
+### Content::Pipeline::Filters::Gemoji
+
+The Gemoji filter allows you to convert :gemoji: into image tags, liquid addet tags and if you really really need it, a custom tag by sending a proc.  By default it will use the path `/asset` which can be ovverriden.
+
+* `:as_liquid_asset` - `nil`
+* `:tag` - `Proc` - 2args - path, name.
+* `:asset_path` - `/assets`
