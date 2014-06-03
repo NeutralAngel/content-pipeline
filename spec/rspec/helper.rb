@@ -1,5 +1,6 @@
 require_relative "../support/simplecov"
 require "luna/rspec/formatters/checks"
+require "rspec/collection_matchers"
 require "content/pipeline"
 require "rspec"
 

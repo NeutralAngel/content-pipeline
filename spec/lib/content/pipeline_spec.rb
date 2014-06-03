@@ -25,8 +25,8 @@ describe Content::Pipeline do
   end
 
   it "runs filters" do
-    filter.should_receive(:new).with("# Foo", anything()).and_call_original
-    filter.any_instance.should_receive(:run).and_call_original
+    expect(filter).to receive(:new).with("# Foo", anything()).and_call_original
+    expect_any_instance_of(filter).to receive(:run).and_call_original
     expect(subject.new(filter).filter("# Foo")).to match /<h1[^>]*>Foo<\/h1>/
   end
 
