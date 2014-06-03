@@ -4,14 +4,14 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
     :strip_html => :nokogiri
   })
 
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
 
   private
   def default
     jruby? ? :kramdown : :gfm
   end
 
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
 
   private
   def markdown
@@ -24,7 +24,7 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
     end
   end
 
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
 
   private
   def parse_github
@@ -32,7 +32,7 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
     GitHub::Markdown.to_html(@str, @type).strip
   end
 
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
 
   private
   def parse_kramdown
@@ -45,7 +45,7 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
     normalize_kramdown(str.to_html).strip
   end
 
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
 
   private
   def strip_html
@@ -59,7 +59,7 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
     end
   end
 
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
 
   private
   def strip_links
@@ -68,7 +68,7 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
     end
   end
 
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
 
   private
   def strip_image
@@ -77,18 +77,18 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
     end
   end
 
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   # @arg String: The Markdown string, convert `` to ~~~.
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
 
   private
   def backtick(str)
     str.gsub(/^`{3}(\s?[a-zA-Z0-9]+)?$/, "~~~\\1")
   end
 
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   # @arg String: The converted Markdown string, from Kramdown.
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
 
   private
   def normalize_kramdown(str)

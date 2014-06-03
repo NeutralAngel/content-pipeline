@@ -5,7 +5,7 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
     :highlight => :nokogiri
   })
 
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
 
   Matcher = /<pre>(.+)<\/pre>/m
   Templates = {
@@ -35,14 +35,14 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
     HTML
   }
 
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
 
   def initialize(*args)
     super(*args)
     @opts[:gutter] = true if @opts[:gutter].nil?
   end
 
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
 
   private
   def highlight
@@ -53,10 +53,10 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
     end
   end
 
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   # @arg String: The "multi-line" string you wish to parse.
   # @arg String: The "programming language" you wish to highlight as.
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
 
   private
   def wrap(str, lang)
@@ -81,10 +81,10 @@ class Content::Pipeline::Filters::CodeHighlight < Content::Pipeline::Filter
     end
   end
 
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   # @arg String: The "multi-line" string you wish to highlight.
   # @arg String: The lang you wish to use when highlighting the string.
-  # -------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
 
   private
   def pygments(str, lang)
