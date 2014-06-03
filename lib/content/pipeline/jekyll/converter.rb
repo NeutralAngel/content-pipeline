@@ -1,7 +1,7 @@
 require "content/pipeline"
 
 module Content::Pipeline::Jekyll
-  class Convertor < Jekyll::Convertor
+  class Converter < Jekyll::Converter
     CONTENT_PIPELINE = Content::Pipeline.new
 
     def matches(ext)
