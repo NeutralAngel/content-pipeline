@@ -72,10 +72,7 @@ class Content::Pipeline
   # ---------------------------------------------------------------------------
 
   module Filters
-    require_relative "filters/code_highlight"
     require_relative "filters/markdown"
-    require_relative "filters/gemoji"
-    #  The filters I prefer to use by default are here.
-    DEFAULT_FILTERS = [ Markdown, CodeHighlight, Gemoji ].freeze
+    DEFAULT_FILTERS = [ Markdown ].freeze
   end
 end

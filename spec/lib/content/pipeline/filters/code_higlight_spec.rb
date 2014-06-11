@@ -1,3 +1,4 @@
+require "content/pipeline/filters/code_highlight"
 require "rspec/helper"
 
 describe Content::Pipeline::Filters::CodeHighlight do

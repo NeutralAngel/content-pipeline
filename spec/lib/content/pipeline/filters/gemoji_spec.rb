@@ -1,3 +1,4 @@
+require "content/pipeline/filters/gemoji"
 require "rspec/helper"
 
 describe Content::Pipeline::Filters::Gemoji do

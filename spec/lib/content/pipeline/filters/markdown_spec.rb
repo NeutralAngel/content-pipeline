@@ -1,3 +1,4 @@
+require "content/pipeline/filters/markdown"
 require "rspec/helper"
 
 describe Content::Pipeline::Filters::Markdown do
