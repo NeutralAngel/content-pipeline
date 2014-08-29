@@ -10,15 +10,9 @@ class Content::Pipeline
     def_delegator "self.class.filters", :[]
     def_delegator "self.class", :filters
 
-    # -------------------------------------------------------------------------
-
     def initialize(str, opts = nil)
       @opts, @str = (opts || {}), str
     end
-
-    # -------------------------------------------------------------------------
-    # @arg Array: The next filter in the chain, to check the types.
-    # -------------------------------------------------------------------------
 
     def run(next_filter = nil)
       return @str unless size > 0
@@ -44,10 +38,6 @@ class Content::Pipeline
     class << self
       attr_reader :filters
 
-      # -----------------------------------------------------------------------
-      # @arg Hash: The filters and the type of input they prefer.
-      # -----------------------------------------------------------------------
-
       def add_filter(*filters)
         @filters ||= []
 
@@ -68,8 +58,6 @@ class Content::Pipeline
       end
     end
   end
-
-  # ---------------------------------------------------------------------------
 
   module Filters
     require_relative "filters/markdown"

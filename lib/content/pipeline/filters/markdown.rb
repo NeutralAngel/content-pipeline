@@ -20,16 +20,32 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
     @type = @opts.fetch(:type, default)
     @str  = backtick(@str)
     @str  = case
+    when @type =~ /\Akramdown\Z/   then parse_kramdown
     when @type =~ /\Agithub|gfm\Z/ then parse_github
-    when @type =~ /\Akramdown\Z/ then parse_kramdown
+    when @type =~ /\Aredcarpet\Z/  then parse_redcarpet
     when @type =~ /\Amarkdown|md\Z/
-      begin parse_github; rescue LoadError
-        parse_kramdown
+      begin parse_redcarpet; rescue LoadError
+        begin parse_kramdown; rescue LoadError
+          parse_github
+        end
       end
     else
       # Actually needed now days.
       raise UnknownParserError, @type
     end
+  end
+
+  private
+  def parse_redcarpet
+    require "redcarpet"
+    with = Redcarpet::Render::HTML
+    (@opts[:parser_opts] ||= {}).merge!({
+      :fenced_code_blocks => true
+    })
+
+    Redcarpet::Markdown.new(with, @opts[:parser_opts]).render(
+      @str
+    )
   end
 
   private
@@ -40,8 +56,12 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
 
   private
   def parse_kramdown
+    (@opts[:parser_opts] ||= {}).merge!({
+      :enable_coderay => false
+    })
+
     require "kramdown"
-    str = Kramdown::Document.new(@str, :enable_coderay => false)
+    str = Kramdown::Document.new(@str, @opts[:parser_opts])
     normalize_kramdown(str.to_html).strip
   end
 

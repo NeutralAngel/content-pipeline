@@ -10,5 +10,6 @@ group :development do
   unless RbConfig::CONFIG["ruby_install_name"] == "jruby"
     gem "pygments.rb"
     gem "github-markdown"
+    gem "redcarpet"
   end
 end

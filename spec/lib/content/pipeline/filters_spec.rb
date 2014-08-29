@@ -3,8 +3,6 @@ require "rspec/helper"
 describe Content::Pipeline::Filter do
   subject { Content::Pipeline }
 
-  # -------------------------------------------------------------------
-
   before :all do
     class DemoFilter1 < Content::Pipeline::Filter
       add_filter({
@@ -12,13 +10,9 @@ describe Content::Pipeline::Filter do
         :hello2 => :str
       })
 
-      # ---------------------------------------------------------------
-
       def hello1
         @str = @str.to_nokogiri_fragment
       end
-
-      # ---------------------------------------------------------------
 
       def hello2
         @str = @str.class if @str == "t"
@@ -30,8 +24,6 @@ describe Content::Pipeline::Filter do
       add_filter({
         :hello => :nokogiri
       })
-
-      # ---------------------------------------------------------------
 
       def hello
         @str = @str.class
@@ -51,8 +43,6 @@ describe Content::Pipeline::Filter do
     end
   end
 
-  # -------------------------------------------------------------------
-
   let(:filters) do
     [
       DemoFilter1,
@@ -60,14 +50,10 @@ describe Content::Pipeline::Filter do
     ]
   end
 
-  # -------------------------------------------------------------------
-
   after :all do
     Object.send(:remove_const, :DemoFilter1)
     Object.send(:remove_const, :DemoFilter2)
   end
-
-  # -------------------------------------------------------------------
 
   context "non-notified deprecated behavior" do
     context "filter :filter1, :filter2 (old behavior)" do
@@ -83,23 +69,17 @@ describe Content::Pipeline::Filter do
     end
   end
 
-  # -------------------------------------------------------------------
-
   context "filter input type" do
     it "will convert to String unless type != str" do
       expect(subject.new([DemoFilter1]).filter("t")).to \
         eq "String"
     end
 
-    # -----------------------------------------------------------------
-
     it "will not convert types that are not str" do
       expect(subject.new(filters).filter("hello")).to \
         eq "Nokogiri::HTML::DocumentFragment"
     end
   end
-
-  # -------------------------------------------------------------------
 
   it "allows you to add ordered filter chains" do
     expect(DemoFilter1.filters).to eq [

@@ -22,7 +22,9 @@ describe Content::Pipeline::Filters::CodeHighlight do
   end
 
   it "allows the user to select the default language" do
-    subject.new(lang_free_code, :default => :text).run.to_nokogiri_fragment.tap do |o|
+    subject.new(lang_free_code, :default => \
+        :text).run.to_nokogiri_fragment.tap do |o|
+
       expect(o.search("#{css}>td.gutter>pre> span.line-number").count).to eq 1
       expect(o.search("#{css}>td.code>pre>code.text>span.line").count).to eq 1
     end

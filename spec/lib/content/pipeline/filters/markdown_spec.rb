@@ -32,11 +32,30 @@ describe Content::Pipeline::Filters::Markdown do
       '<h1 id="foo">Foo</h1>'
   end
 
-  it "it does a fallback" do
-    subj = subject.new("# Foo", :type => :markdown)
-    allow(subj).to receive(:parse_kramdown).and_return("I Win")
-    allow(subj).to receive(:parse_github) { raise LoadError }
-    expect(subj.run).to eq "I Win"
+  context "fallback" do
+    specify "redcarpet" do
+      subj = subject.new("# Foo", :type => :markdown)
+      allow(subj).to receive(:parse_kramdown) { raise LoadError }
+      allow(subj).to receive(:parse_redcarpet).and_return("Redcarpet")
+      allow(subj).to receive(:parse_github) { raise LoadError}
+      expect(subj.run).to eq "Redcarpet"
+    end
+
+    specify "github" do
+      subj = subject.new("# Foo", :type => :markdown)
+      allow(subj).to receive(:parse_kramdown) { raise LoadError }
+      allow(subj).to receive(:parse_redcarpet) { raise LoadError}
+      allow(subj).to receive(:parse_github).and_return("Github")
+      expect(subj.run).to eq "Github"
+    end
+
+    specify "kramdown" do
+      subj = subject.new("# Foo", :type => :markdown)
+      allow(subj).to receive(:parse_redcarpet) { raise LoadError }
+      allow(subj).to receive(:parse_kramdown).and_return("Kramdown")
+      allow(subj).to receive(:parse_github) { raise LoadError }
+      expect(subj.run).to eq "Kramdown"
+    end
   end
 
   it "raises UnknownParserError on unknown type" do
@@ -48,5 +67,11 @@ describe Content::Pipeline::Filters::Markdown do
     it "can use Github markdown" do
       expect(subject.new("# Foo", :type => :gfm).run).to eq "<h1>Foo</h1>"
     end
+
+    it "can use Redcarpet markdown" do
+      expect(subject.new("# Foo", :type => :redcarpet).run).to eq \
+        "<h1>Foo</h1>\n"
+    end
+
   end
 end
