@@ -16,6 +16,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency("nokogiri", "~> 1.6")
   spec.add_development_dependency("rspec", "~> 3.0")
   spec.add_development_dependency("envygeeks-coveralls", "~> 0.2")
-  spec.add_development_dependency("rspec-collection_matchers", "~> 1.0.0")
+  spec.add_development_dependency("rspec-collection_matchers", "~> 1.0")
   spec.add_development_dependency("luna-rspec-formatters", "~> 1")
 end
