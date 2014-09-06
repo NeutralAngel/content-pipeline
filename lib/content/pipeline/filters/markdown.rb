@@ -12,7 +12,7 @@ class Content::Pipeline::Filters::Markdown < Content::Pipeline::Filter
 
   private
   def default
-    jruby? ? :kramdown : :gfm
+    jruby? ? :kramdown : :redcarpet
   end
 
   private
