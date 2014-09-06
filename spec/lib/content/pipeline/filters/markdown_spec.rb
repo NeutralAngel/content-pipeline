@@ -14,11 +14,11 @@ describe Content::Pipeline::Filters::Markdown do
     end
 
     it "converts anchors to strs" do
-      expect(subject.filter("[Foo](//foo)")).to eq "<p>//foo</p>"
+      expect(subject.filter("[Foo](//foo)").strip).to eq "<p>//foo</p>"
     end
 
     it "strips images" do
-      expect(subject.filter("![Foo](/foo.jpg)")).to be_empty
+      expect(subject.filter("![Foo](/foo.jpg)").strip).to be_empty
     end
   end
 
