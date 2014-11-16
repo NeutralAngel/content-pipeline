@@ -59,10 +59,10 @@ Content::Pipeline.new.filter('# Markdown')
 ```
 
 * Supports global options with overrides.
-* By default uses `CodeHighlight`, `Markdown`, `Gemoji`.
+* By default uses only `Markdown`.
 * Supports multiple Markdowns.
 
-*It should be noted that if you send a list of filters you wish to use, it will not use the default filters at all.  So where you see `[ MyFilter ]` that will be the only filter that is ran, since it automatically assumes this is the pipeline you wish to use.*
+*It should be noted that if you send a list of filters you wish to use, it will not use the default filter at all.  So where you see `[ MyFilter ]` that will be the only filter that is ran, since it automatically assumes this is the pipeline you wish to use.*
 
 ### Filter Options
 
